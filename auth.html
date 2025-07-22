@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Signup | Hiring OS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border border-slate-200">
+    <div class="flex flex-col items-center mb-6">
+      <img src="assets/hiring os logo.png" alt="Hiring OS Logo" class="h-12 w-12 mb-2">
+      <h1 class="text-2xl font-bold text-slate-900">Hiring OS</h1>
+      <p class="text-slate-500 mt-1">Login or Signup</p>
+    </div>
+    <form id="auth-form" class="space-y-4">
+      <div class="flex justify-center gap-4 mb-2">
+        <label class="inline-flex items-center">
+          <input type="radio" name="role" value="candidate" class="form-radio text-blue-600" checked>
+          <span class="ml-2">Candidate</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="radio" name="role" value="interviewer" class="form-radio text-blue-600">
+          <span class="ml-2">Interviewer</span>
+        </label>
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-slate-700">Email</label>
+        <input type="email" id="email" class="mt-1 block w-full p-2 border border-slate-300 rounded-md" required>
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+        <input type="password" id="password" class="mt-1 block w-full p-2 border border-slate-300 rounded-md" required>
+      </div>
+      <div id="auth-error" class="text-red-600 text-sm hidden"></div>
+      <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors" id="auth-action-btn">Login</button>
+      <div class="text-center mt-2">
+        <button type="button" id="toggle-auth-mode" class="text-blue-600 hover:underline text-sm">Don't have an account? Signup</button>
+      </div>
+    </form>
+  </div>
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>

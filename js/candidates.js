@@ -18,35 +18,18 @@ export function renderTable(data) {
     dom.tableBody.innerHTML = '';
     dom.noResultsEl.classList.toggle('hidden', data.length > 0);
     dom.noResultsEl.textContent = state.jobs[state.activeJobIndex].candidates.length === 0 ? 'No candidates loaded.' : 'No candidates match search.';
-    
     data.forEach(candidate => {
         const originalIndex = state.jobs[state.activeJobIndex].candidates.findIndex(c => c.id === candidate.id);
         const row = document.createElement('tr');
         row.className = 'hover:bg-slate-50';
         row.dataset.candidateId = candidate.id;
 
-        let timingHtml = `<button data-index="${originalIndex}" class="schedule-btn bg-gray-200 text-gray-800 font-bold py-2 px-3 rounded-lg hover:bg-gray-300 text-xs">Schedule</button>`;
-        if (candidate.interviewStart) {
-            const date = new Date(candidate.interviewStart);
-            const formatted = date.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-            timingHtml = `<a href="#" data-index="${originalIndex}" class="schedule-btn text-blue-600 hover:text-blue-800">${formatted}</a>`;
-        }
-        
-        let scoreHtml;
-        if (candidate.atsScore) {
-            scoreHtml = `${candidate.atsScore} / 100`;
-        } else if (candidate.isScoring) {
-            scoreHtml = '<span class="score-loading"></span>';
-        } else {
-            scoreHtml = `<button data-index="${originalIndex}" class="ai-score-btn bg-purple-600 text-white font-bold py-1 px-2 rounded-lg hover:bg-purple-700 text-xs">AI Score</button>`;
-        }
-
         row.innerHTML = `
-            <td class="status-cell px-6 py-4 whitespace-nowrap text-sm text-center"></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">${candidate.name || 'N/A'}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500" title="${candidate.email}">${candidate.email || 'N/A'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700">${scoreHtml}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">${timingHtml}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="${candidate.resume || '#'}" target="_blank" class="text-blue-600 hover:underline">Resume</a></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="${candidate.github || '#'}" target="_blank" class="text-gray-800 hover:underline">GitHub</a></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="${candidate.deployedLink || '#'}" target="_blank" class="text-green-700 hover:underline">Portfolio</a></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                 <button data-index="${originalIndex}" class="view-details-btn bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 text-xs">View Details</button>
             </td>
@@ -72,7 +55,7 @@ export function handleLoadCsv() {
                 if (parsedData === null) return;
                 
                 state.jobs[state.activeJobIndex].candidates = parsedData.map((candidate, index) => ({
-                    ...candidate, id: `candidate-${index}`, attended: false, reviews: [], interviewStart: null, interviewEnd: null, atsScore: null
+                    ...candidate, id: `candidate-${index}`, attended: false, reviews: [], interviewStart: null, interviewEnd: null, atsScore: null, status: 'Screening'
                 }));
                 
                 saveJobs();

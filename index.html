@@ -18,6 +18,24 @@
 
     <div class="container mx-auto p-4 md:p-8">
         
+        <!-- Candidate Application Form -->
+        <section class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8 max-w-2xl mx-auto">
+          <h2 class="text-xl font-semibold text-slate-700 mb-4">Apply for a Job</h2>
+          <form id="candidate-application-form" class="flex flex-col gap-4">
+            <select id="application-job-select" class="p-2 border border-slate-300 rounded-lg" required>
+              <option value="">Select a job...</option>
+              <!-- Job options will be injected by JS -->
+            </select>
+            <input type="text" id="application-name" placeholder="Your Name" class="p-2 border border-slate-300 rounded-lg" required>
+            <input type="email" id="application-email" placeholder="Your Email" class="p-2 border border-slate-300 rounded-lg" required>
+            <input type="url" id="application-resume" placeholder="Resume Link (URL)" class="p-2 border border-slate-300 rounded-lg">
+            <input type="url" id="application-github" placeholder="GitHub Link (URL)" class="p-2 border border-slate-300 rounded-lg">
+            <input type="url" id="application-portfolio" placeholder="Portfolio/Deployed Link (URL)" class="p-2 border border-slate-300 rounded-lg">
+            <button type="submit" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">Apply</button>
+            <div id="application-success" class="text-green-600 text-sm hidden">Application submitted!</div>
+          </form>
+        </section>
+        
         <!-- Jobs View -->
         <main id="jobs-view">
             <header class="text-center mb-8 flex flex-col items-center">
@@ -29,8 +47,11 @@
                 <!-- Create New Job Form -->
                 <section class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8">
                     <h2 class="text-xl font-semibold text-slate-700 mb-4">Create New Job</h2>
-                    <form id="new-job-form" class="flex items-center gap-4">
+                    <form id="new-job-form" class="flex flex-col md:flex-row md:items-center gap-4">
                         <input type="text" id="new-job-name" placeholder="e.g., Senior Frontend Developer" class="flex-grow p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <input type="text" id="new-job-location" placeholder="Location (e.g., Remote, New York)" class="p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <input type="text" id="new-job-department" placeholder="Department (e.g., Engineering)" class="p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <textarea id="new-job-description" placeholder="Job Description" class="p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none min-h-[40px]" required></textarea>
                         <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Create Job</button>
                     </form>
                 </section>
@@ -99,11 +120,11 @@
                     <table class="min-w-full divide-y divide-slate-200">
                         <thead class="bg-slate-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ATS Score</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Interview Timings</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Resume</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">GitHub</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Portfolio</th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Details</th>
                             </tr>
                         </thead>

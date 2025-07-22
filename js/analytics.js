@@ -17,12 +17,28 @@ export function renderAnalytics() {
     const scheduled = candidates.filter(c => c.interviewStart).length;
     const attended = candidates.filter(c => c.attended).length;
 
+    // Status breakdown
+    const statusOptions = ['Screening', 'Interviewed', 'Offered', 'Rejected', 'Hired'];
+    const statusCounts = {};
+    statusOptions.forEach(status => {
+        statusCounts[status] = candidates.filter(c => (c.status || 'Screening') === status).length;
+    });
+
     dom.analyticsTotal.textContent = total;
     dom.analyticsScheduled.textContent = scheduled;
     dom.analyticsAttended.textContent = attended;
 
     dom.analyticsScheduledPercent.textContent = total > 0 ? `(${(scheduled / total * 100).toFixed(1)}%) of total` : '';
     dom.analyticsAttendedPercent.textContent = scheduled > 0 ? `(${(attended / scheduled * 100).toFixed(1)}%) of scheduled` : '';
+
+    // Show status breakdown below analytics cards if present
+    let statusBreakdownDiv = document.getElementById('status-breakdown');
+    if (!statusBreakdownDiv) {
+        statusBreakdownDiv = document.createElement('div');
+        statusBreakdownDiv.id = 'status-breakdown';
+        dom.analyticsTotal.parentElement.parentElement.appendChild(statusBreakdownDiv);
+    }
+    statusBreakdownDiv.innerHTML = `<div class='mt-4 text-center'><strong>Status Breakdown:</strong> ${statusOptions.map(s => `${statusCounts[s]} ${s}`).join(', ')}</div>`;
 }
 
 /**
@@ -34,7 +50,11 @@ export function handleAnalyticsClick() {
     const total = candidates.length;
     const scheduled = candidates.filter(c => c.interviewStart).length;
     const attended = candidates.filter(c => c.attended).length;
-    
+    const statusOptions = ['Screening', 'Interviewed', 'Offered', 'Rejected', 'Hired'];
+    const statusCounts = {};
+    statusOptions.forEach(status => {
+        statusCounts[status] = candidates.filter(c => (c.status || 'Screening') === status).length;
+    });
     dom.analyticsResults.innerHTML = `
         <div class="flex items-center justify-around text-center">
             <div><div class="text-4xl font-bold">${total}</div><div class="text-slate-500">Total</div></div>
@@ -46,6 +66,7 @@ export function handleAnalyticsClick() {
         <div class="mt-6 text-center">
             <p><strong>Conversion Rate:</strong> ${total > 0 ? ((scheduled / total) * 100).toFixed(1) : 0}% of candidates were scheduled for an interview.</p>
             <p><strong>Interview Show-up Rate:</strong> ${scheduled > 0 ? ((attended / scheduled) * 100).toFixed(1) : 0}% of scheduled candidates attended their interview.</p>
+            <div class='mt-4'><strong>Status Breakdown:</strong> ${statusOptions.map(s => `${statusCounts[s]} ${s}`).join(', ')}</div>
         </div>
     `;
     toggleModal(dom.analyticsModal, true);

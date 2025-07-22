@@ -20,6 +20,9 @@ export function renderJobs() {
             <div>
                 <h3 class="text-lg font-bold text-slate-800">${job.name}</h3>
                 <p class="text-slate-500 mt-1">${job.candidates.length} candidate(s)</p>
+                <p class="text-slate-600 mt-1"><span class='font-semibold'>Location:</span> ${job.location || 'N/A'}</p>
+                <p class="text-slate-600 mt-1"><span class='font-semibold'>Department:</span> ${job.department || 'N/A'}</p>
+                <p class="text-slate-600 mt-1"><span class='font-semibold'>Description:</span> ${job.description || 'N/A'}</p>
             </div>
             <div class="mt-4 flex gap-2">
                 <button data-index="${index}" class="view-job-btn flex-grow bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700">View</button>
@@ -37,10 +40,22 @@ export function renderJobs() {
 export function handleNewJobSubmit(e) {
     e.preventDefault();
     const jobName = dom.newJobNameInput.value.trim();
+    const jobLocation = document.getElementById('new-job-location').value.trim();
+    const jobDepartment = document.getElementById('new-job-department').value.trim();
+    const jobDescription = document.getElementById('new-job-description').value.trim();
     if (jobName) {
-        state.jobs.push({ name: jobName, candidates: [] });
+        state.jobs.push({
+            name: jobName,
+            location: jobLocation,
+            department: jobDepartment,
+            description: jobDescription,
+            candidates: []
+        });
         saveJobs();
         dom.newJobNameInput.value = '';
+        document.getElementById('new-job-location').value = '';
+        document.getElementById('new-job-department').value = '';
+        document.getElementById('new-job-description').value = '';
         renderJobs();
     }
 }

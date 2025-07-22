@@ -13,7 +13,21 @@ export function showJobsView() {
 
 export function showDashboardView(jobIndex) {
   state.activeJobIndex = jobIndex;
-  dom.dashboardTitle.textContent = state.jobs[jobIndex]?.name || '';
+  const job = state.jobs[jobIndex];
+  dom.dashboardTitle.textContent = job?.name || '';
+  // Add job metadata display
+  const dashboardHeader = dom.dashboardTitle.parentElement;
+  let metaDiv = dashboardHeader.querySelector('.job-meta');
+  if (!metaDiv) {
+    metaDiv = document.createElement('div');
+    metaDiv.className = 'job-meta text-slate-600 mt-2';
+    dashboardHeader.appendChild(metaDiv);
+  }
+  metaDiv.innerHTML = `
+    <div><span class='font-semibold'>Location:</span> ${job?.location || 'N/A'}</div>
+    <div><span class='font-semibold'>Department:</span> ${job?.department || 'N/A'}</div>
+    <div><span class='font-semibold'>Description:</span> ${job?.description || 'N/A'}</div>
+  `;
   dom.jobsView.classList.add('hidden');
   dom.dashboardView.classList.remove('hidden');
   dom.candidateDetailView.classList.add('hidden');
