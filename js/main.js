@@ -5,7 +5,8 @@
 
 import { state, loadJobs } from './state.js';
 import { initializeDom, dom } from './dom.js';
-import { handleNewJobSubmit, handleJobsListClick } from './jobs.js';
+// Import renderJobs from jobs.js to display jobs on load
+import { handleNewJobSubmit, handleJobsListClick, renderJobs } from './jobs.js';
 import { showJobsView, showDashboardView, applyFiltersAndRender } from './views.js';
 import { handleLoadCsv, handleTableBodyClick, handleScheduleSubmit, handleNewScorecardSubmit, handleAttendedChange, updateLiveHighlight } from './candidates.js';
 import { handleAnalyticsClick } from './analytics.js';
@@ -41,6 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.detailAttended.addEventListener('change', handleAttendedChange);
     dom.newScorecardForm.addEventListener('submit', handleNewScorecardSubmit);
     
-    // 6. Set up a recurring check every 30 seconds to update the "LIVE" badge for ongoing interviews.
+    // 7. Set up a recurring check every 30 seconds to update the "LIVE" badge for ongoing interviews.
     setInterval(updateLiveHighlight, 30000);
 });
