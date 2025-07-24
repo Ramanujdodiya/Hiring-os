@@ -30,8 +30,9 @@ export function renderTable(data) {
             <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="${candidate.resume || '#'}" target="_blank" class="text-blue-600 hover:underline">Resume</a></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="${candidate.github || '#'}" target="_blank" class="text-gray-800 hover:underline">GitHub</a></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm"><a href="${candidate.deployedLink || '#'}" target="_blank" class="text-green-700 hover:underline">Portfolio</a></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-center flex gap-2 justify-center">
                 <button data-index="${originalIndex}" class="view-details-btn bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 text-xs">View Details</button>
+                <button data-index="${originalIndex}" class="schedule-btn bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 text-xs">Schedule</button>
             </td>
         `;
         dom.tableBody.appendChild(row);

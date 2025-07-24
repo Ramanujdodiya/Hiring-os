@@ -30,11 +30,15 @@ export function toggleModal(modal, show) {
 export function initializeModals() {
     document.querySelectorAll('.modal-close-btn, .modal-cancel-btn, .modal-overlay').forEach(el => {
         el.addEventListener('click', () => {
-            [dom.scheduleModal, dom.analyticsModal, dom.inviteModal].forEach(m => {
+            [dom.scheduleModal, dom.analyticsModal, dom.inviteModal, dom.interviewSessionModal].forEach(m => {
                 if (m) { // Check if the modal element exists
                     toggleModal(m, false);
                 }
             });
         });
     });
+}
+
+export function showInterviewSessionModal(show) {
+    toggleModal(dom.interviewSessionModal, show);
 }

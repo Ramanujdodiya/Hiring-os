@@ -10,7 +10,7 @@ import { handleNewJobSubmit, handleJobsListClick, renderJobs } from './jobs.js';
 import { showJobsView, showDashboardView, applyFiltersAndRender } from './views.js';
 import { handleLoadCsv, handleTableBodyClick, handleScheduleSubmit, handleNewScorecardSubmit, handleAttendedChange, updateLiveHighlight } from './candidates.js';
 import { handleAnalyticsClick } from './analytics.js';
-import { initializeModals } from './modals.js';
+import { initializeModals, showInterviewSessionModal } from './modals.js';
 
 // This is the main function that runs when the page is loaded.
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,4 +44,89 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 7. Set up a recurring check every 30 seconds to update the "LIVE" badge for ongoing interviews.
     setInterval(updateLiveHighlight, 30000);
+
+    // Monaco loader config (run ONCE)
+    if (typeof window.require === 'function') {
+        window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+    }
+
+    // Example: Add a global function to open the interview session modal (to be called from a button)
+    window.openInterviewSession = function() {
+        showInterviewSessionModal(true);
+
+        // --- Jitsi Meet Integration ---
+        const videoContainer = document.getElementById('video-call-container');
+        videoContainer.innerHTML = '';
+        // Check if Jitsi script is loaded
+        if (typeof window.JitsiMeetExternalAPI !== 'function') {
+            videoContainer.innerHTML = '<div class="text-red-600 p-4">Jitsi Meet script not loaded. Please check your internet connection or try again later.</div>';
+        } else {
+            // Generate a unique room name (for demo: use job and candidate index)
+            let roomName = 'HiringOS_Interview';
+            if (window.state && window.state.activeJobIndex >= 0 && window.state.activeCandidateIndex >= 0) {
+                roomName += `_job${window.state.activeJobIndex}_cand${window.state.activeCandidateIndex}`;
+            } else {
+                roomName += `_${Date.now()}`;
+            }
+            // Jitsi options
+            const domain = 'meet.jit.si';
+            const options = {
+                roomName,
+                width: '100%',
+                height: 400,
+                parentNode: videoContainer,
+                configOverwrite: { startWithAudioMuted: false, startWithVideoMuted: false },
+                interfaceConfigOverwrite: { TOOLBAR_BUTTONS: [ 'microphone', 'camera', 'desktop', 'fullscreen', 'hangup', 'chat', 'raisehand', 'tileview' ] }
+            };
+            if (window.jitsiApi) { window.jitsiApi.dispose(); }
+            window.jitsiApi = new window.JitsiMeetExternalAPI(domain, options);
+
+            // --- Monaco Editor Integration with Yjs ---
+            const editorContainer = document.getElementById('live-code-editor');
+            editorContainer.innerHTML = '';
+            if (typeof window.require !== 'function') {
+                editorContainer.innerHTML = '<div class="text-red-600 p-4">Monaco Editor script not loaded. Please check your internet connection or try again later.</div>';
+            } else {
+                if (window.monacoEditor) { window.monacoEditor.dispose(); }
+                window.require(['vs/editor/editor.main'], function() {
+                    // Yjs setup
+                    const ydoc = new window.Y.Doc();
+                    const ytext = ydoc.getText('monaco');
+                    // Use the same room name as Jitsi for y-webrtc
+                    const provider = new window.Y.WebrtcProvider(roomName, ydoc);
+                    window.monacoEditor = monaco.editor.create(editorContainer, {
+                        value: ytext.toString() || '// Start coding together!\n',
+                        language: 'javascript',
+                        theme: 'vs-dark',
+                        automaticLayout: true
+                    });
+                    // Monaco <-> Yjs binding
+                    const monacoBinding = {
+                        isApplyingRemote: false
+                    };
+                    // Update Monaco when Yjs changes
+                    ytext.observe(event => {
+                        if (monacoBinding.isApplyingRemote) return;
+                        monacoBinding.isApplyingRemote = true;
+                        const newValue = ytext.toString();
+                        if (window.monacoEditor.getValue() !== newValue) {
+                            window.monacoEditor.setValue(newValue);
+                        }
+                        monacoBinding.isApplyingRemote = false;
+                    });
+                    // Update Yjs when Monaco changes
+                    window.monacoEditor.onDidChangeModelContent(() => {
+                        if (monacoBinding.isApplyingRemote) return;
+                        monacoBinding.isApplyingRemote = true;
+                        const value = window.monacoEditor.getValue();
+                        if (ytext.toString() !== value) {
+                            ytext.delete(0, ytext.length);
+                            ytext.insert(0, value);
+                        }
+                        monacoBinding.isApplyingRemote = false;
+                    });
+                });
+            }
+        }
+    };
 });

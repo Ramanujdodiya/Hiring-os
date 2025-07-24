@@ -20,6 +20,7 @@ export function initializeDom() {
     dom.scheduleModal = document.getElementById('schedule-modal');
     dom.analyticsModal = document.getElementById('analytics-modal');
     dom.inviteModal = document.getElementById('invite-modal');
+    dom.interviewSessionModal = document.getElementById('interview-session-modal');
 
     // === Jobs View Elements ===
     dom.newJobForm = document.getElementById('new-job-form');
